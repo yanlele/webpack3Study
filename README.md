@@ -1,2 +1,5 @@
 # webpack3Study
-webpack3的学习笔记和demo
+
+####1、认识webpack 
+    webpack 是一个打包工具，主要做了三件事儿
+    
