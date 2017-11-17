@@ -13,7 +13,26 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/,//用正则匹配到需要使用loader处理的问题件
-                use: [ 'style-loader', 'css-loader' ]//配置处理loader
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
+                    }
+                ], //配置处理loader
+                /*
+                 * 配置loader的其他几种方式：
+                 * 1、loader: ['style-loader', 'css-loader']
+                 * 2、use:[
+                 *  {
+                 *      loader:"style-loader"
+                 *  },
+                 *  {
+                 *      loader:"css-loader"
+                 *  }
+                 * ]
+                 * */
                 // include:'',//配置什么文件需要处理
                 // exclude:'',//配置什么文件不需要处理
                 // query:''//为loader配置额外配置项
