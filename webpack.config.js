@@ -1,4 +1,5 @@
 const path = require('path');
+const uglify=require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -39,7 +40,9 @@ module.exports = {
             }
         ]
     },
-    plugins: [],
+    plugins: [
+        new uglify()
+    ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
         host: '192.168.1.3',
