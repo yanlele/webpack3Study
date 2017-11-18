@@ -1,10 +1,11 @@
 const path = require('path');
-const uglify=require('uglifyjs-webpack-plugin');
+const UglifyJsPlugin=require('uglifyjs-webpack-plugin');
+const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装一次
 
 module.exports = {
     entry: {
         entry: './src/entry.js',
-        entry2: './src/entry2.js'
+        // entry2: './src/entry2.js'
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -41,7 +42,15 @@ module.exports = {
         ]
     },
     plugins: [
-        new uglify()
+        //new UglifyJsPlugin()
+
+        new htmlPlugin({
+            minify:{
+                removeAttributeQuotes:true,//id=""引号去掉了
+            },
+            hash:true,//每次更新JS会加一个哈希，取消缓存的问题
+            template:'./src/index.html'
+        })
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
