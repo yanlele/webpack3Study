@@ -38,6 +38,15 @@ module.exports = {
                 // include:'',//配置什么文件需要处理
                 // exclude:'',//配置什么文件不需要处理
                 // query:''//为loader配置额外配置项
+            },
+            {
+                test:/\.(png|jpg|gif)/,
+                use:[{
+                    loader: "url-loader",
+                    options:{
+                        limit:5000,//大于5K 字节的，打包为图片，如果小于5K ，就转换为base64
+                    }
+                }]
             }
         ]
     },

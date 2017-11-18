@@ -90,7 +90,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, options);
+var update = __webpack_require__(5)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -115,7 +115,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "body{\r\n    background-color: #c4ffee;\r\n    color: #ffbedb;\r\n}", ""]);
+exports.push([module.i, "body{\r\n    background-color: #c4ffee;\r\n    color: #ffbedb;\r\n}\r\n\r\n#tupian{\r\n    background-image: url(" + __webpack_require__(4) + ");\r\n    width:300px;\r\n    height:300px;\r\n}", ""]);
 
 // exports
 
@@ -206,6 +206,12 @@ function toComment(sourceMap) {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__.p + "8bdb5d4da58ca6af2f5ac4ed3590037d.jpg";
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /*
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
@@ -259,7 +265,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(5);
+var	fixUrls = __webpack_require__(6);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -575,7 +581,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 
