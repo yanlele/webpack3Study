@@ -4,7 +4,7 @@ const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装
 const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
 
 var website={
-    publicPath:'http://192.168.1.3:8081'
+    publicPath:'http://192.168.1.3:8081/'
 };
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "[name].js",
+        filename: "js/[name].js",
         publicPath: website.publicPath,//这个可以解决静态文件路径的问题
     },
     module: {
@@ -47,6 +47,7 @@ module.exports = {
                     loader: "url-loader",
                     options:{
                         limit:5000,//大于5K 字节的，打包为图片，如果小于5K ，就转换为base64
+                        outputPath:"images/"
                     }
                 }]
             }
