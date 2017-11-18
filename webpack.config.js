@@ -1,6 +1,11 @@
 const path = require('path');
-const UglifyJsPlugin=require('uglifyjs-webpack-plugin');
+const UglifyJsPlugin=require('uglifyjs-webpack-plugin');//代码压缩的插件
 const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装一次
+const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
+
+var website={
+    publicPath:'http://192.168.1.3:8081'
+};
 
 module.exports = {
     entry: {
@@ -9,20 +14,17 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "[name].js"
+        filename: "[name].js",
+        publicPath: website.publicPath,//这个可以解决静态文件路径的问题
     },
     module: {
         rules: [
             {
                 test: /\.css$/,//用正则匹配到需要使用loader处理的问题件
-                use: [
-                    {
-                        loader: "style-loader"
-                    },
-                    {
-                        loader: "css-loader"
-                    }
-                ], //配置处理loader
+                use: extractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                }), //配置处理loader
                 /*
                  * 配置loader的其他几种方式：
                  * 1、loader: ['style-loader', 'css-loader']
@@ -59,7 +61,8 @@ module.exports = {
             },
             hash:true,//每次更新JS会加一个哈希，取消缓存的问题
             template:'./src/index.html'
-        })
+        }),
+        new extractTextPlugin('css/index.css')
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
