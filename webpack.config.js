@@ -57,13 +57,14 @@ module.exports = {
             },
             {
                 test:/.less$/,
-                use:[{
-                    loader: "style-loader"
-                },{
-                    loader: "css-loader"
-                },{
-                    loader: "less-loader"
-                }]
+                use:extractTextPlugin.extract({
+                    use:[{
+                        loader: "css-loader"
+                    },{
+                        loader: "less-loader"
+                    }],
+                    fallback:"style-loader"
+                })
             }
         ]
     },
