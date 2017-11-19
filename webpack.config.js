@@ -128,5 +128,11 @@ module.exports = {
         host: '192.168.1.3',
         compress: true,//是否启用服务器压缩
         port: 8081
+    },
+
+    watchOptions: {
+        poll:1000,//检测修改文件的时间
+        aggregateTimeout:500,//半秒内保存不会重复打包，以防止出错
+        ignored:/mode_modules/,//不用打包某些文件目录
     }
 };
