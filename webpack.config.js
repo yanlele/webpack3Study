@@ -5,10 +5,18 @@ const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装
 const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
 const PurifyCSSPlugin=require('purifycss-webpack');
 
+console.log(encodeURIComponent(process.env.type));
+if(process.env.type=='build'){
+    var website={
+        publicPath:'http://yanlele.com:8081/'
+    };
+}else{
+    var website={
+        publicPath:'http://192.168.1.3:8081/'
+    };
+}
 
-var website={
-    publicPath:'http://192.168.1.3:8081/'
-};
+
 
 module.exports = {
     /**
