@@ -3,10 +3,12 @@ const glob=require('glob');
 const UglifyJsPlugin=require('uglifyjs-webpack-plugin');//代码压缩的插件
 const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装一次
 const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
-const PurifyCSSPlugin=require('purifycss-webpack');
+const PurifyCSSPlugin=require('purifycss-webpack');//这个是优化css的一个东西
+const entry=require('./webpack_config/entry_webpack');
+
 
 console.log(encodeURIComponent(process.env.type));
-if(process.env.type=='build'){
+if(process.env.type==='build'){
     var website={
         publicPath:'http://yanlele.com:8081/'
     };
@@ -27,10 +29,11 @@ module.exports = {
      * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
      */
     devtool: "cheap-module-source-map",
-    entry: {
+    entry: entry.path,
+/*        {
         entry: './src/entry.js',
         // entry2: './src/entry2.js'
-    },
+    },*/
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: "js/[name].js",
