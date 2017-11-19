@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "webpack-dev-server --open",
-    "dev":"set type=dev&webpack",
+    "dev": "set type=dev&webpack",
     "build": "set type=build&webpack"
   },
   "author": "",
@@ -31,5 +31,8 @@
     "url-loader": "^0.6.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4"
+  },
+  "dependencies": {
+    "jquery": "^1.11.3"
   }
 }
