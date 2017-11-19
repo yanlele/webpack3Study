@@ -75,6 +75,13 @@ module.exports = {
                     }],
                     fallback:"style-loader"
                 })
+            },
+            {
+                test:/\.(jsx|js)$/,
+                use:[{
+                    loader: "babel-loader"
+                }],
+                exclude:/node_modules/
             }
         ]
     },

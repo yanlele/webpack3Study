@@ -1,4 +1,8 @@
 import css from './css/index.css';
 import less from './css/black.less'
 
-document.getElementById('title').innerHTML='hello webpack!!';
+{
+    let str='hello webpack!!';
+
+    document.getElementById('title').innerHTML=str;
+}
