@@ -23,7 +23,14 @@ module.exports = {
                 test: /\.css$/,//用正则匹配到需要使用loader处理的问题件
                 use: extractTextPlugin.extract({
                     fallback: "style-loader",
-                    use: "css-loader"
+                    use: [
+                        {
+                            loader:"css-loader"
+                        },
+                        {
+                            loader:'postcss-loader'
+                        }
+                    ]
                 }), //配置处理loader
                 /*
                  * 配置loader的其他几种方式：
