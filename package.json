@@ -33,6 +33,7 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "jquery": "^1.11.3"
+    "jquery": "^1.11.3",
+    "vue": "^2.5.6"
   }
 }

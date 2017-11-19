@@ -31,7 +31,8 @@ module.exports = {
     devtool: "cheap-module-source-map",
     entry: {
         entry: './src/entry.js',
-        jquery: 'jquery'
+        jquery: 'jquery',
+        vue:"vue"
         // entry2: './src/entry2.js'
     },
     output: {
@@ -106,8 +107,8 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({//这个是优化的插件，可以抽离三方类库框架等
-           name:'jquery',
-            filename:'assets/js/jquery.mini.js',
+           name:['jquery','vue'],
+            filename:'assets/js/[name].mini.js',
             minChunks:2,//抽离几个文件
         }),
 

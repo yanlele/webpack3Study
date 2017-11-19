@@ -4604,6 +4604,10 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue@^2.5.6:
+  version "2.5.6"
+  resolved "http://registry.npm.taobao.org/vue/download/vue-2.5.6.tgz#73654fefa4b37f25dfc657b8b834b44c90822cd7"
+
 watchpack@^1.4.0:
   version "1.4.0"
   resolved "http://registry.npm.taobao.org/watchpack/download/watchpack-1.4.0.tgz#4a1472bcbb952bd0a9bb4036801f954dfb39faac"
