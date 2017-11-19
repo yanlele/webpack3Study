@@ -5,6 +5,7 @@ const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装
 const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
 const PurifyCSSPlugin=require('purifycss-webpack');//这个是优化css的一个东西
 const entry=require('./webpack_config/entry_webpack');
+const webpack=require('webpack');
 
 
 console.log(encodeURIComponent(process.env.type));
@@ -106,7 +107,10 @@ module.exports = {
     },
     plugins: [
         //new UglifyJsPlugin()
-
+        new webpack.ProvidePlugin({//这个插件可以全局引用三方类库
+           $:'jquery',
+            // 'vue':'vue'
+        }),
         new htmlPlugin({
             minify:{
                 removeAttributeQuotes:true,//id=""引号去掉了
