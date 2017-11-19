@@ -136,7 +136,8 @@ module.exports = {
         new copyWebpackPlugin([{//把一个文件的内容复制到另外一个地方
             from:__dirname+'/src/public',
             to:'./public'
-        }])
+        }]),
+        new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录

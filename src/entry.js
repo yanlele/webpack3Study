@@ -11,7 +11,7 @@ import lele from './lele';
 
 lele();
 
-$('#title').html('yanlele welcome!');
+$('#title').html('yanlele welcome!123123');
 
 var json=require('../config.json');
 document.getElementById('json').innerHTML=json.name+': website: '+json.webSite;
