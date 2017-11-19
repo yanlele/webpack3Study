@@ -1,7 +1,10 @@
 const path = require('path');
+const glob=require('glob');
 const UglifyJsPlugin=require('uglifyjs-webpack-plugin');//代码压缩的插件
 const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装一次
 const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
+const PurifyCSSPlugin=require('purifycss-webpack');
+
 
 var website={
     publicPath:'http://192.168.1.3:8081/'
@@ -85,7 +88,10 @@ module.exports = {
             hash:true,//每次更新JS会加一个哈希，取消缓存的问题
             template:'./src/index.html'
         }),
-        new extractTextPlugin('css/index.css')
+        new extractTextPlugin('css/index.css'),
+        new PurifyCSSPlugin({
+            paths:glob.sync(path.join(__dirname,"src/*.html"))  //指定需要扫描删除css对应页面的dom 结构
+        })
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
