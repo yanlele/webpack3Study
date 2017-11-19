@@ -54,6 +54,16 @@ module.exports = {
             {
                 test:/\.(html|htm)$/,
                 use:['html-withimg-loader']
+            },
+            {
+                test:/.less$/,
+                use:[{
+                    loader: "style-loader"
+                },{
+                    loader: "css-loader"
+                },{
+                    loader: "less-loader"
+                }]
             }
         ]
     },
