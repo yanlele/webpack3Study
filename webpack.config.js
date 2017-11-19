@@ -11,6 +11,14 @@ var website={
 };
 
 module.exports = {
+    /**
+     * 对于devTool模式有四种
+     * source-mpa  生成独立map文件，包括：行列（打包是最慢的）
+     * cheap-module-source-map   生成独立map文件，只包括行（打包比上略快）
+     * eval-source-map  不生成独立的map文件，优点快！但是会有安全隐患（一定是在开发阶段）
+     * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
+     */
+    devtool: "cheap-module-source-map",
     entry: {
         entry: './src/entry.js',
         // entry2: './src/entry2.js'
