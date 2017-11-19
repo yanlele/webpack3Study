@@ -6,6 +6,7 @@ const extractTextPlugin = require('extract-text-webpack-plugin');//这个是打�
 const PurifyCSSPlugin = require('purifycss-webpack');//这个是优化css的一个东西
 const entry = require('./webpack_config/entry_webpack');
 const webpack = require('webpack');
+const copyWebpackPlugin=require('copy-webpack-plugin');
 
 
 console.log(encodeURIComponent(process.env.type));
@@ -131,7 +132,11 @@ module.exports = {
         new PurifyCSSPlugin({
             paths: glob.sync(path.join(__dirname, "src/*.html"))  //指定需要扫描删除css对应页面的dom 结构
         }),
-        new webpack.BannerPlugin('作者：晴小篆')//打包文件带一个文本申明
+        new webpack.BannerPlugin('作者：晴小篆'),//打包文件带一个文本申明
+        new copyWebpackPlugin([{//把一个文件的内容复制到另外一个地方
+            from:__dirname+'/src/public',
+            to:'./public'
+        }])
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
@@ -139,7 +144,6 @@ module.exports = {
         compress: true,//是否启用服务器压缩
         port: 8081
     },
-
     watchOptions: {
         poll: 1000,//检测修改文件的时间
         aggregateTimeout: 500,//半秒内保存不会重复打包，以防止出错
