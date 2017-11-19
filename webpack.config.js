@@ -107,6 +107,8 @@ module.exports = {
     },
     plugins: [
         //new UglifyJsPlugin()
+
+        //webpack.ProvidePlugin用这个打包的好处是可以优化代码，如果使用，他就不会打包！
         new webpack.ProvidePlugin({//这个插件可以全局引用三方类库
            $:'jquery',
             // 'vue':'vue'
