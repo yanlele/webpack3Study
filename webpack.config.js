@@ -121,7 +121,8 @@ module.exports = {
         new extractTextPlugin('css/index.css'),
         new PurifyCSSPlugin({
             paths:glob.sync(path.join(__dirname,"src/*.html"))  //指定需要扫描删除css对应页面的dom 结构
-        })
+        }),
+        new webpack.BannerPlugin('作者：晴小篆')//打包文件带一个文本申明
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
