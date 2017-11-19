@@ -1,24 +1,23 @@
 const path = require('path');
-const glob=require('glob');
-const UglifyJsPlugin=require('uglifyjs-webpack-plugin');//代码压缩的插件
-const htmlPlugin=require('html-webpack-plugin');//这个需要自己手动安装一次
-const extractTextPlugin=require('extract-text-webpack-plugin');//这个是打包分离css的插件
-const PurifyCSSPlugin=require('purifycss-webpack');//这个是优化css的一个东西
-const entry=require('./webpack_config/entry_webpack');
-const webpack=require('webpack');
+const glob = require('glob');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');//代码压缩的插件
+const htmlPlugin = require('html-webpack-plugin');//这个需要自己手动安装一次
+const extractTextPlugin = require('extract-text-webpack-plugin');//这个是打包分离css的插件
+const PurifyCSSPlugin = require('purifycss-webpack');//这个是优化css的一个东西
+const entry = require('./webpack_config/entry_webpack');
+const webpack = require('webpack');
 
 
 console.log(encodeURIComponent(process.env.type));
-if(process.env.type==='build'){
-    var website={
-        publicPath:'http://yanlele.com:8081/'
+if (process.env.type === 'build') {
+    var website = {
+        publicPath: 'http://yanlele.com:8081/'
     };
-}else{
-    var website={
-        publicPath:'http://192.168.1.3:8081/'
+} else {
+    var website = {
+        publicPath: 'http://192.168.1.3:8081/'
     };
 }
-
 
 
 module.exports = {
@@ -30,11 +29,11 @@ module.exports = {
      * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
      */
     devtool: "cheap-module-source-map",
-    entry: entry.path,
-/*        {
+    entry: {
         entry: './src/entry.js',
+        jquery: 'jquery'
         // entry2: './src/entry2.js'
-    },*/
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: "js/[name].js",
@@ -48,10 +47,10 @@ module.exports = {
                     fallback: "style-loader",
                     use: [
                         {
-                            loader:"css-loader"
+                            loader: "css-loader"
                         },
                         {
-                            loader:'postcss-loader'
+                            loader: 'postcss-loader'
                         }
                     ]
                 }), //配置处理loader
@@ -72,57 +71,64 @@ module.exports = {
                 // query:''//为loader配置额外配置项
             },
             {
-                test:/\.(png|jpg|gif)/,
-                use:[{
+                test: /\.(png|jpg|gif)/,
+                use: [{
                     loader: "url-loader",
-                    options:{
-                        limit:5000,//大于5K 字节的，打包为图片，如果小于5K ，就转换为base64
-                        outputPath:"images/"
+                    options: {
+                        limit: 5000,//大于5K 字节的，打包为图片，如果小于5K ，就转换为base64
+                        outputPath: "images/"
                     }
                 }]
             },
             {
-                test:/\.(html|htm)$/,
-                use:['html-withimg-loader']
+                test: /\.(html|htm)$/,
+                use: ['html-withimg-loader']
             },
             {
-                test:/.less$/,
-                use:extractTextPlugin.extract({
-                    use:[{
+                test: /.less$/,
+                use: extractTextPlugin.extract({
+                    use: [{
                         loader: "css-loader"
-                    },{
+                    }, {
                         loader: "less-loader"
                     }],
-                    fallback:"style-loader"
+                    fallback: "style-loader"
                 })
             },
             {
-                test:/\.(jsx|js)$/,
-                use:[{
+                test: /\.(jsx|js)$/,
+                use: [{
                     loader: "babel-loader"
                 }],
-                exclude:/node_modules/
+                exclude: /node_modules/
             }
         ]
     },
     plugins: [
+        new webpack.optimize.CommonsChunkPlugin({//这个是优化的插件，可以抽离三方类库框架等
+           name:'jquery',
+            filename:'assets/js/jquery.mini.js',
+            minChunks:2,//抽离几个文件
+        }),
+
+
         //new UglifyJsPlugin()
 
         //webpack.ProvidePlugin用这个打包的好处是可以优化代码，如果使用，他就不会打包！
         new webpack.ProvidePlugin({//这个插件可以全局引用三方类库
-           $:'jquery',
+            $: 'jquery',
             // 'vue':'vue'
         }),
         new htmlPlugin({
-            minify:{
-                removeAttributeQuotes:true,//id=""引号去掉了
+            minify: {
+                removeAttributeQuotes: true,//id=""引号去掉了
             },
-            hash:true,//每次更新JS会加一个哈希，取消缓存的问题
-            template:'./src/index.html'
+            hash: true,//每次更新JS会加一个哈希，取消缓存的问题
+            template: './src/index.html'
         }),
         new extractTextPlugin('css/index.css'),
         new PurifyCSSPlugin({
-            paths:glob.sync(path.join(__dirname,"src/*.html"))  //指定需要扫描删除css对应页面的dom 结构
+            paths: glob.sync(path.join(__dirname, "src/*.html"))  //指定需要扫描删除css对应页面的dom 结构
         }),
         new webpack.BannerPlugin('作者：晴小篆')//打包文件带一个文本申明
     ],
@@ -134,8 +140,8 @@ module.exports = {
     },
 
     watchOptions: {
-        poll:1000,//检测修改文件的时间
-        aggregateTimeout:500,//半秒内保存不会重复打包，以防止出错
-        ignored:/mode_modules/,//不用打包某些文件目录
+        poll: 1000,//检测修改文件的时间
+        aggregateTimeout: 500,//半秒内保存不会重复打包，以防止出错
+        ignored: /mode_modules/,//不用打包某些文件目录
     }
 };
