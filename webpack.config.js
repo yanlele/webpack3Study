@@ -14,16 +14,13 @@ var srcDir = path.resolve(process.cwd(),'src');
 console.log(encodeURIComponent(process.env.type));
 if (process.env.type === 'build') {
     var website = {
-        publicPath: 'http://yanlele.com:8081/'
+        publicPath: '/'
     };
 } else {
     var website = {
         publicPath: 'http://127.0.0.1:8081/'
     };
 }
-
-var entrys=genEntries();
-console.log(entrys);
 
 var config = {
     /**
@@ -34,10 +31,15 @@ var config = {
      * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
      */
     devtool: "cheap-module-source-map",
-    entry: entrys,
+    entry: {
+        entry: './src/scripts/entry.js',
+        jquery: 'jquery',
+        // vue:"vue"
+        // entry2: './src/entry2.js'
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: "js/[name].js",
+        filename: "scripts/[name].js",
         publicPath: website.publicPath,//这个可以解决静态文件路径的问题
     },
     module: {
@@ -107,8 +109,8 @@ var config = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({//这个是优化的插件，可以抽离三方类库框架等
-            name: ['jquery', 'vue'],
-            filename: 'assets/commonModules/[name].mini.js',
+            name: ['jquery'],
+            filename: 'scripts/[name].mini.js',
             minChunks: 2,//抽离几个文件
         }),
 
@@ -174,57 +176,6 @@ if (process.env.type === 'build') {
     var website = {
         publicPath: 'http://127.0.0.1:8081/'
     };
-}
-
-var pages = fs.readdirSync(srcDir);
-
-var links = [];
-pages.forEach(function(filename) {
-    var m = filename.match(/(.+)\.html$/);
-    if(m) {
-        var fileContent = fs.readFileSync(
-            path.resolve(srcDir, filename), "utf-8");
-        var injectReg = /\<meta\s[^\<\>]*name=\"no-need-script\"[^\<\>]*\>/;
-        var inject = injectReg.test(fileContent)?false:'body';
-        var title = (/<title>[^<>]*<\/title>/i).exec(fileContent)[0];
-        title = title.replace(/<\/?title>/g, '');
-        links.push('<li><a href="'+config.output.publicPath+m[0]+'">'+title+'-'+filename+'</a></li>');
-        var conf = {
-            template: 'html-withimg-loader?min=false!'+path.resolve(srcDir, filename),
-            filename: filename
-        };
-
-        if(m[1] in config.entry) {
-            conf.inject = inject;
-            conf.chunks = ['common', m[1]];
-        }
-
-        config.plugins.push(new htmlPlugin(conf));
-
-        var jsPath = path.resolve(srcDir, 'js/', filename.replace('.html', '.js'));
-        if(!injectReg.test(fileContent) && !fs.existsSync(jsPath)) {
-            var fd = fs.openSync(jsPath, 'a');
-            fs.appendFileSync(jsPath, '/**\n* '+filename+'的入口文件\n*/\n', {encoding: 'utf-8'});
-            fs.closeSync(fd);
-        }
-
-    }
-});
-
-function genEntries() {
-    var jsDir = path.resolve(srcDir, 'js');
-    var names = fs.readdirSync(jsDir);
-    var map = {};
-
-    names.forEach(function(name) {
-        var m = name.match(/(.+)\.js$/);
-        var entry = m ? m[1] : '';
-        var entryPath = entry ? path.resolve(jsDir, name) : '';
-
-        if(entry) map[entry] = entryPath;
-    });
-
-    return map;
 }
 
 module.exports = config;
