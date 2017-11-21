@@ -16,7 +16,7 @@ if (process.env.type === 'build') {
     };
 } else {
     var website = {
-        publicPath: 'http://192.168.1.3:8081/'
+        publicPath: 'http://127.0.0.1:8081/'
     };
 }
 
@@ -31,7 +31,7 @@ module.exports = {
      */
     devtool: "cheap-module-source-map",
     entry: {
-        entry: './src/entry.js',
+        entry: './src/js/entry.js',
         jquery: 'jquery',
         vue:"vue"
         // entry2: './src/entry2.js'
@@ -141,7 +141,7 @@ module.exports = {
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),//服务监听目录
-        host: '192.168.1.3',
+        host: '127.0.0.1',
         compress: true,//是否启用服务器压缩
         port: 8081
     },

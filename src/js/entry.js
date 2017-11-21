@@ -1,5 +1,5 @@
-import css from './css/index.css';
-import less from './css/black.less'
+import css from '../css/index.css';
+import less from '../css/black.less'
 
 import lele from './lele';
 
@@ -13,5 +13,5 @@ lele();
 
 $('#title').html('yanlele welcome!123123');
 
-var json=require('../config.json');
+var json=require('../../config.json');
 document.getElementById('json').innerHTML=json.name+': website: '+json.webSite;
