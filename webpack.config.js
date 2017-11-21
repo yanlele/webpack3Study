@@ -1,16 +1,14 @@
 const path = require('path');
 const glob = require('glob');
-const fs=require('fs');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');//代码压缩的插件
 const htmlPlugin = require('html-webpack-plugin');//这个需要自己手动安装一次
 const extractTextPlugin = require('extract-text-webpack-plugin');//这个是打包分离css的插件
 const PurifyCSSPlugin = require('purifycss-webpack');//这个是优化css的一个东西
 const entry = require('./webpack_config/entry_webpack');
 const webpack = require('webpack');
-const copyWebpackPlugin = require('copy-webpack-plugin');//拷贝人间打包的
-const OptimizeCssAssetsPlugin =require('optimize-css-assets-webpack-plugin');
+const copyWebpackPlugin=require('copy-webpack-plugin');
 
-var srcDir = path.resolve(process.cwd(),'src');
+
 console.log(encodeURIComponent(process.env.type));
 if (process.env.type === 'build') {
     var website = {
@@ -22,10 +20,8 @@ if (process.env.type === 'build') {
     };
 }
 
-var entrys=genEntries();
-console.log(entrys);
 
-var config = {
+module.exports = {
     /**
      * 对于devTool模式有四种
      * source-mpa  生成独立map文件，包括：行列（打包是最慢的）
@@ -34,7 +30,12 @@ var config = {
      * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
      */
     devtool: "cheap-module-source-map",
-    entry: entrys,
+    entry: {
+        entry: './src/js/entry.js',
+        jquery: 'jquery',
+        vue:"vue"
+        // entry2: './src/entry2.js'
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: "js/[name].js",
@@ -107,13 +108,13 @@ var config = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({//这个是优化的插件，可以抽离三方类库框架等
-            name: ['jquery', 'vue'],
-            filename: 'assets/commonModules/[name].mini.js',
-            minChunks: 2,//抽离几个文件
+           name:['jquery','vue'],
+            filename:'assets/js/[name].mini.js',
+            minChunks:2,//抽离几个文件
         }),
 
 
-        // new UglifyJsPlugin(),
+        //new UglifyJsPlugin()
 
         //webpack.ProvidePlugin用这个打包的好处是可以优化代码，如果使用，他就不会打包！
         new webpack.ProvidePlugin({//这个插件可以全局引用三方类库
@@ -133,8 +134,8 @@ var config = {
         }),
         new webpack.BannerPlugin('作者：晴小篆'),//打包文件带一个文本申明
         new copyWebpackPlugin([{//把一个文件的内容复制到另外一个地方
-            from: __dirname + '/src/public',
-            to: './public'
+            from:__dirname+'/src/public',
+            to:'./public'
         }]),
         new webpack.HotModuleReplacementPlugin()
     ],
@@ -150,81 +151,3 @@ var config = {
         ignored: /mode_modules/,//不用打包某些文件目录
     }
 };
-
-
-if (process.env.type === 'build') {
-    var website = {
-        publicPath: 'http://yanlele.com:8081/'
-    };
-
-    config.plugins.push(
-        new UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        }),
-        new OptimizeCssAssetsPlugin({
-            assetNameRegExp: /\.css$/g,
-            cssProcessor: require('cssnano'),
-            cssProcessorOptions: { discardComments: { removeAll: true } },
-            canPrint: true
-        })
-    )
-} else {
-    var website = {
-        publicPath: 'http://127.0.0.1:8081/'
-    };
-}
-
-var pages = fs.readdirSync(srcDir);
-
-var links = [];
-pages.forEach(function(filename) {
-    var m = filename.match(/(.+)\.html$/);
-    if(m) {
-        var fileContent = fs.readFileSync(
-            path.resolve(srcDir, filename), "utf-8");
-        var injectReg = /\<meta\s[^\<\>]*name=\"no-need-script\"[^\<\>]*\>/;
-        var inject = injectReg.test(fileContent)?false:'body';
-        var title = (/<title>[^<>]*<\/title>/i).exec(fileContent)[0];
-        title = title.replace(/<\/?title>/g, '');
-        links.push('<li><a href="'+config.output.publicPath+m[0]+'">'+title+'-'+filename+'</a></li>');
-        var conf = {
-            template: 'html-withimg-loader?min=false!'+path.resolve(srcDir, filename),
-            filename: filename
-        };
-
-        if(m[1] in config.entry) {
-            conf.inject = inject;
-            conf.chunks = ['common', m[1]];
-        }
-
-        config.plugins.push(new htmlPlugin(conf));
-
-        var jsPath = path.resolve(srcDir, 'js/', filename.replace('.html', '.js'));
-        if(!injectReg.test(fileContent) && !fs.existsSync(jsPath)) {
-            var fd = fs.openSync(jsPath, 'a');
-            fs.appendFileSync(jsPath, '/**\n* '+filename+'的入口文件\n*/\n', {encoding: 'utf-8'});
-            fs.closeSync(fd);
-        }
-
-    }
-});
-
-function genEntries() {
-    var jsDir = path.resolve(srcDir, 'js');
-    var names = fs.readdirSync(jsDir);
-    var map = {};
-
-    names.forEach(function(name) {
-        var m = name.match(/(.+)\.js$/);
-        var entry = m ? m[1] : '';
-        var entryPath = entry ? path.resolve(jsDir, name) : '';
-
-        if(entry) map[entry] = entryPath;
-    });
-
-    return map;
-}
-
-module.exports = config;
