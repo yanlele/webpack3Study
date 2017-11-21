@@ -6,7 +6,8 @@ const extractTextPlugin = require('extract-text-webpack-plugin');//这个是打�
 const PurifyCSSPlugin = require('purifycss-webpack');//这个是优化css的一个东西
 const entry = require('./webpack_config/entry_webpack');
 const webpack = require('webpack');
-const copyWebpackPlugin=require('copy-webpack-plugin');
+const copyWebpackPlugin = require('copy-webpack-plugin');//拷贝人间打包的
+const OptimizeCssAssetsPlugin =require('optimize-css-assets-webpack-plugin');
 
 
 console.log(encodeURIComponent(process.env.type));
@@ -20,8 +21,7 @@ if (process.env.type === 'build') {
     };
 }
 
-
-module.exports = {
+var config = {
     /**
      * 对于devTool模式有四种
      * source-mpa  生成独立map文件，包括：行列（打包是最慢的）
@@ -33,7 +33,7 @@ module.exports = {
     entry: {
         entry: './src/js/entry.js',
         jquery: 'jquery',
-        vue:"vue"
+        vue: "vue"
         // entry2: './src/entry2.js'
     },
     output: {
@@ -108,13 +108,13 @@ module.exports = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({//这个是优化的插件，可以抽离三方类库框架等
-           name:['jquery','vue'],
-            filename:'assets/js/[name].mini.js',
-            minChunks:2,//抽离几个文件
+            name: ['jquery', 'vue'],
+            filename: 'assets/js/[name].mini.js',
+            minChunks: 2,//抽离几个文件
         }),
 
 
-        //new UglifyJsPlugin()
+        // new UglifyJsPlugin(),
 
         //webpack.ProvidePlugin用这个打包的好处是可以优化代码，如果使用，他就不会打包！
         new webpack.ProvidePlugin({//这个插件可以全局引用三方类库
@@ -134,8 +134,8 @@ module.exports = {
         }),
         new webpack.BannerPlugin('作者：晴小篆'),//打包文件带一个文本申明
         new copyWebpackPlugin([{//把一个文件的内容复制到另外一个地方
-            from:__dirname+'/src/public',
-            to:'./public'
+            from: __dirname + '/src/public',
+            to: './public'
         }]),
         new webpack.HotModuleReplacementPlugin()
     ],
@@ -151,3 +151,31 @@ module.exports = {
         ignored: /mode_modules/,//不用打包某些文件目录
     }
 };
+
+
+if (process.env.type === 'build') {
+    var website = {
+        publicPath: 'http://yanlele.com:8081/'
+    };
+
+    config.plugins.push(
+        new UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
+        new OptimizeCssAssetsPlugin({
+            assetNameRegExp: /\.css$/g,
+            cssProcessor: require('cssnano'),
+            cssProcessorOptions: { discardComments: { removeAll: true } },
+            canPrint: true
+        })
+    )
+} else {
+    var website = {
+        publicPath: 'http://127.0.0.1:8081/'
+    };
+}
+
+
+module.exports = config;
