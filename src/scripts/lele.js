@@ -1,5 +1,5 @@
 function lele(){
-    console.log('lele webpack')
+    console.log('lele!!!!!!!')
 }
 
 module.exports=lele;

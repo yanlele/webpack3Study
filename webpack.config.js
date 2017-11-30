@@ -10,6 +10,9 @@ const webpack = require('webpack');
 const copyWebpackPlugin = require('copy-webpack-plugin');//拷贝人间打包的
 const OptimizeCssAssetsPlugin =require('optimize-css-assets-webpack-plugin');
 
+
+require('./webpack_config/entry_webpack');
+
 var srcDir = path.resolve(process.cwd(),'src');
 console.log(encodeURIComponent(process.env.type));
 if (process.env.type === 'build') {
@@ -30,7 +33,7 @@ var config = {
      * eval-source-map  不生成独立的map文件，优点快！但是会有安全隐患（一定是在开发阶段）
      * cheap-module-eval-source-map 只有列，是上面的模式的简化版本
      */
-    devtool: "cheap-module-source-map",
+    // devtool: "cheap-module-source-map",
     entry: {
         entry: './src/scripts/entry.js',
         jquery: 'jquery',
